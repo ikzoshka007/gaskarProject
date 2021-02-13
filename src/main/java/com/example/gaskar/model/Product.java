@@ -10,10 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.util.List;
 
 @Entity
@@ -21,22 +18,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(uniqueConstraints={@UniqueConstraint(columnNames={"product_code"})})
 public class Product {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column( name = "product_code")
+  @Column(name = "product_code", unique = true)
   private String productCode;
-
-  @ManyToOne
-  private Product productName;
 
   private String name;
 
-  @OneToMany(mappedBy = "productName")
+  @OneToMany(mappedBy = "product")
   private List<Detail> detailList;
 
   private int countOfUsedDetails;
