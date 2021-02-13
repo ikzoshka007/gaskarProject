@@ -5,17 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import java.util.List;
 
 @Entity
@@ -23,7 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(uniqueConstraints={@UniqueConstraint(columnNames={"detail_code"})})
 public class Detail {
 
   @Id
@@ -32,15 +28,19 @@ public class Detail {
 
   private String name;
 
-  @Column( name = "detail_code")
+  @Column( name = "detail_code", unique = true)
   private String detailCode;
+
+  @ManyToOne
+  private Product product;
 
   @ManyToOne
   private Detail parentDetail;
 
-  @OneToMany(mappedBy = "parentDetail")
+  @OneToMany(mappedBy = "parentDetail", cascade = CascadeType.ALL)
   private List<Detail> innerDetailList;
 
+  @OneToMany(mappedBy = "detail", cascade = CascadeType.ALL)
   private List<Certificate> certificateList;
 
   private int countOfUsedDetails;
